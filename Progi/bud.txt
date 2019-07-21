@@ -1,0 +1,65 @@
+#! /bin/bash
+echo "вас приветствует будтльник ";
+echo "*******  МЕНЮ  ************";
+echo "1-установить будильник";
+echo "2-посмотреть имеющиеся будильники";
+echo "3-удалить будильник";
+echo "4-изменить имеющийся будильник";
+echo "5-выход";
+read t;
+if [ $t -eq 1  ]; 
+then
+echo "Вы выбрали установку будильника"
+echo "введите время будильника в часах ";
+read h;
+echo "введите время в минутах  ";
+read m;
+echo "хотите установить повтор будилиника 1-да 2-нет ";
+read pov;
+if [ $pov -eq "1" ];
+then
+echo "введите через сколько минут хотите повторять будильник"
+read pv;
+fi
+echo "введите день недели будильника 1-понедельни....7-воскресенье ";
+read d;
+echo "установить месяц будильника ";
+read mon
+if [ $pov -eq "1" ];
+then
+echo " */$m $h * $mon  $d mpg123 /home/alex/Загрузки/paul-mauriat-adagio-$" > /home/alex/cron.txt;
+crontab -l > cront.txt;
+cat cron.txt >> cront.txt;
+crontab <cront.txt
+fi
+
+if [ $pov -eq "2" ];
+then
+echo "$m $h * $mon  $d mpg123 /home/alex/Загрузки/paul-mauriat-adagi$" > /home/alex/cron.txt;
+crontab -l > cront.txt;
+cat cron.txt >> cront.txt;
+crontab <cront.txt
+fi
+fi
+
+if [ $t -eq 2  ]; 
+then
+crontab -l > cront.txt;
+echo "--------"
+sed  /mpg123/p cront.txt > zap.txt ;
+cat zap.txt;
+fi
+
+if [ $t -eq 3  ]; 
+then
+echo " введите часы будильника который хотите удалить";
+read dh;
+echo "введите минуты будильника который хотите удалить";
+read dm;
+fi
+
+if [ $t -eq 4  ]; 
+then
+crontab -l >> zap.txt;
+fi
+

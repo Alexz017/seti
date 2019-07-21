@@ -1,0 +1,129 @@
+#!/bin/bash
+function wr {
+crontab -l &> tasks;
+t1=`grep "no crontab" tasks`;
+t=`whoami`;
+t2=`echo "no crontab for $t"`;
+if [ "$t1" = "$t2" ]
+then
+echo "$m $h * * $dow mpg123 $mu/$des.mp3"  ***Будильник*** > tasks;
+crontab tasks
+else
+echo "$m $h * * $dow mpg123 $mu/$des.mp3" ***Будильник*** >> tasks;
+crontab tasks;
+fi
+}
+function alist {
+crontab -l &> tasks;
+echo "                                       ";
+echo "Список активных будильников:";
+echo "***************************************";
+echo "минута час";
+grep ***Будильник*** tasks | cut -d " " -f  2,1
+echo "***************************************";
+echo "                                       ";
+}
+function anew {
+echo "Введите время будильника (в формате: час минута):";
+read h m;
+echo "Хотите выбрать стандартную музыку для будильника?(y или n)";
+read mz;
+if [ $mz = y ]
+then
+mu=/home/alex/будильник;
+echo "Выберите музыку для будильника:";
+echo "Музыкальное меню";
+echo "1- мелодия 1";
+echo "2- мелодия 2";
+echo "3- мелодия 3";
+echo "4- мелодия 4";
+read des;
+fi
+if [ $mz = n ]
+then
+echo "Введите путь к музыкальному файлу";
+read mu;
+echo "Введите название музыкального файла"
+read des;
+fi
+echo "Желаете чтобы ваш будильник повторялся по дням недели? (y или n)";
+read ans;
+echo "введите название проигрывателя для будильника";
+dow=*;
+if [ $ans = y ]
+then
+echo "В какие дни вы желаете, чтобы будильник повторялся?";
+echo "1-понедельник ..... 7-воскресенье";
+echo "Например, с понедельника по пятницу: 1-5 ";
+echo "Или с понедельника по среду по и в пятницу: 1-3,5";
+read dow;
+wr;
+echo "Будильник установлен на $h:$m с повтором $dow!";
+alist;
+else
+wr;
+echo "Будильник установлен на $h:$m!";
+alist;
+fi
+}
+function music {
+	echo "список установленных ауди-плееров";
+	dpkg -l &> progi;
+	grep -w "audio player" progi | cut -d " " -f  3
+
+}
+function aremove {
+alist;
+echo "Введите время, которое желаете удалить (минуты часы):"
+read ho;
+sed -i "s!$ho.*!deletethis!" tasks;
+sed -i '/deletethis/d' tasks;
+crontab tasks;
+alist;
+}
+function aedit {
+alist;
+echo "Введите время будильника, который желаете изменить(минуты часы):"
+read te;
+sed -i "s!$te.*!deletethis!" tasks;
+sed -i '/deletethis/d' tasks;
+crontab tasks;
+anew;
+}
+function menu {
+echo "****************************************************";
+echo "######  Добропожаловать  редактор в будильника!   ##";
+echo "######  Выберите желаемое действие:               ##";
+echo "######  1-Вывести список активных будильников     ##";
+echo "######  2-Установить новый будильник              ##";
+echo "######  3-Редактировать будильник                 ##";
+echo "######  4-Удалить будильник                       ##";
+echo "######  5-выбрать нужный плеер для будильника     ##";
+echo "######  6-Выйти                                   ##";
+echo "****************************************************";
+read a;
+if [ $a -eq 1 ]
+then
+alist;
+menu;
+elif [ $a -eq 2 ]
+then
+anew;
+menu;
+elif [ $a -eq 3 ]
+then
+aedit;
+menu;
+elif [ $a -eq 4 ]
+then
+aremove;
+menu;
+elif [ $a -eq 5 ]
+then
+music;
+elif [ $a -eq 6 ]
+then
+exit 1;
+fi
+}
+menu;

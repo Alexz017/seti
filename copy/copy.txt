@@ -1,0 +1,101 @@
+#!/bin/bash
+function aedit {
+alist;
+echo "Введите время копирования которое хотите удалить(минуты часы):"
+read te;
+sed -i "s!$te.*!deletethis!" tasks;
+sed -i '/deletethis/d' tasks;
+crontab tasks;
+anew;
+}
+function aremove {
+alist;
+echo "Введите время копирования которое хотите удалить(минуты часы):"
+read ho;
+sed -i "s!$ho.*!deletethis!" tasks;
+sed -i '/deletethis/d' tasks;
+crontab tasks;
+alist;
+}
+function wr {
+crontab -l &> tasks;
+t1=`grep "no crontab" tasks`;
+t=`whoami`;
+t2=`echo "no crontab for $t"`;
+if [ "$t1" = "$t2" ]
+then
+echo "$m $h * * $dow tar cf ar.tar $cy "  ***копирование*** > tasks;
+crontab tasks
+else
+echo "$m $h * * $dow tar cf $ar.tar $cy " ***копирование*** >> tasks;
+crontab tasks;
+fi
+}
+function alist {
+crontab -l &> tasks;
+echo "                                       ";
+echo "Список активных резервных копирований:";
+echo "**********************************************************************";
+echo "м час название архивируемого файла";
+grep ***копирование*** tasks | cut -d " " -f  2,1,9
+echo "**********************************************************************";
+echo "                                       ";
+}
+function anew {
+echo "Введите название того, что желаете поставить на резервное копирование";
+read cy;
+echo "введите время копирования в формате час минута"
+read h m;
+echo "Введите название архива";
+read ar;
+echo "Установить повтор копирования 1-по дням 2-по часам";
+read povt;
+if [ $povt -eq 1 ]
+then
+echo "Через сколько дней вы хотите чтобы происходило резервное копирование";
+read dw;
+dow=*/$dw;
+elif [ $povt -eq 2 ]
+then
+echo "введите через сколько часов вы хотете чтобы происходило резервное копирование"
+read hr;
+h=*/$hr;
+fi
+wr;
+echo "Резервное копирование будет выполняться в $h:$m с повтором $dow!";
+alist;
+
+}
+function menu {
+echo "**********************************************************************";
+echo "##########  Добропожаловать в меню резервного копирования   ##########";
+echo "##########  Выберите желаемое действие:                     ##########";
+echo "##########  1-Вывести список активных резервных копирований ##########";
+echo "##########  2-Задать резервное копирование                  ##########";
+echo "##########  3-Редактировать параметры копирования           ##########";
+echo "##########  4-Удалить копирование                           ##########";
+echo "##########  5-Выйти                                         ##########";
+echo "**********************************************************************";
+read a;
+if [ $a -eq 1 ]
+then
+alist;
+menu;
+elif [ $a -eq 2 ]
+then
+anew;
+menu;
+elif [ $a -eq 3 ]
+then
+aedit;
+menu;
+elif [ $a -eq 4 ]
+then
+aremove;
+menu;
+elif [ $a -eq 5 ]
+then
+exit 1;
+fi
+}
+menu;

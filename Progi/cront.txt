@@ -1,0 +1,18 @@
+2 2 * 2  2 mpg123 /home/alex/Загрузки/paul-mauriat-adagi$
+8 8 * 8  7 mpg123 /home/alex/Загрузки/paul-mauriat-adagi$
+8 8 * 8  7 mpg123 /home/alex/Загрузки/paul-mauriat-adagi$
+8 8 * 8  7 mpg123 /home/alex/Загрузки/paul-mauriat-adagi$
+8 8 * 8  7 mpg123 /home/alex/Загрузки/paul-mauriat-adagi$
+8 8 * 8  7 mpg123 /home/alex/Загрузки/paul-mauriat-adagi$
+8 8 * 8  7 mpg123 /home/alex/Загрузки/paul-mauriat-adagi$
+8 8 * 8  7 mpg123 /home/alex/Загрузки/paul-mauriat-adagi$
+8 8 * 8  7 mpg123 /home/alex/Загрузки/paul-mauriat-adagi$
+8 8 * 8  7 mpg123 /home/alex/Загрузки/paul-mauriat-adagi$
+8 8 * 8  7 mpg123 /home/alex/Загрузки/paul-mauriat-adagi$
+8 8 * 8  7 mpg123 /home/alex/Загрузки/paul-mauriat-adagi$
+8 8 * 8  7 mpg123 /home/alex/Загрузки/paul-mauriat-adagi$
+8 8 * 8  7 mpg123 /home/alex/Загрузки/paul-mauriat-adagi$
+8 8 * 8  7 mpg123 /home/alex/Загрузки/paul-mauriat-adagi$
+8 8 * 8  7 mpg123 /home/alex/Загрузки/paul-mauriat-adagi$
+
+9 9 * 7  7 mpg123 /home/alex/Загрузки/paul-mauriat-adagi$

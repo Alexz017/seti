@@ -1,0 +1,27 @@
+#! /bin/bash
+echo "введите путь в котором хотите создать папки"
+read d;
+echo "введите количество папок"
+read w
+echo "введите количество создаваемых папок в папке"
+read e;
+echo "введите шаблон для названия папок"
+read o
+echo "введите шаблон для названия папок в папках"
+read p
+cd /$d
+ for (( i=0; i<w; i++  )); do
+for (( t=0; t<e; t++  )); do
+	mkdir -p $o$i/$p$t
+done
+done
+echo "введите количество файлов в папке"
+read x
+for (( i=0; i<w; i++  )); do
+for (( t=0; t<e; t++  )); do
+        for (( z=0; z<x; z++  )); do
+		cd /$d/$o$i/$p$t
+touch $z.txt
+done
+done
+done
