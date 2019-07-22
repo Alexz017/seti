@@ -1,0 +1,107 @@
+#!/bin/bash
+printf "Введите адрес сети\n";
+read b;
+printf "Введите маску сети\n";
+read a;
+
+printf "\nАдрес=$b\n";
+printf "Netmask=$a";
+
+IFS='.' read -r -a iparray <<< "b";
+
+for((i=0; i<4;i++))
+do
+b_ip[i]=`echo "obase=2;${iparray[i]}" | bc`;
+done
+
+for((j=0;j<4; j++))
+do
+test=${b_ip[j]};
+for ((i=7; i>=0;i--))
+do
+bip[i+j*8]=$((test % 10));
+test=$((test/10));
+done
+done
+IFS='.' read -r -a maskarray <<< "$a";
+
+for((i=0; i<4;i++))
+do
+b_mask[i]=`echo "obase=2;${maskarray[i]}" | bc`;
+done
+counter=0;
+for((j=0;j<4; j++))
+do
+test=${b_mask[j]};
+for ((i=7; i>=0;i--))
+do
+bmask[i+j*8]=$((test % 10));
+test=$((test/10));
+done
+done
+
+for index in "${!bmask[@]}"
+do
+    #printf "$   {bmask[index]}";
+   if [ ${bmask[index]} -eq 1 ]
+   then
+   counter=$(($counter+1));
+   fi
+done
+printf "\nbitmask=$counter\n";
+
+zeroes=$((32-$counter));
+
+for i in "${!bmask[@]}"
+do
+   mip[i]=$((bip[i]*bmask[i]));
+   if [ ${bmask[i]} -eq 0 ]
+   then
+   bbroad[i]=1;
+   bhostmin[i]=0;
+   bhostmax[i]=1;
+   else
+   bbroad[i]=${mip[i]};
+   bhostmin[i]=${mip[i]};
+   bhostmax[i]=${mip[i]};
+   fi
+done
+bhostmin[31]=1;
+bhostmax[31]=0;
+
+j=0
+for i in 0 8 16 24
+do
+octet[j]=`printf "${mip[0+i]}${mip[1+i]}${mip[2+i]}${mip[3+i]}${mip[4+i]}"${mip[5+i]}${mip[6+i]}${mip[7+i]}`;
+obd[j]=`printf "${bbroad[0+i]}${bbroad[1+i]}${bbroad[2+i]}${bbroad[3+i]}${bbroad[4+i]}"${bbroad[5+i]}${bbroad[6+i]}${bbroad[7+i]}`
+obhmin[j]=`printf "${bhostmin[0+i]}${bhostmin[1+i]}${bhostmin[2+i]}${bhostmin[3+i]}${bhostmin[4+i]}"${bhostmin[5+i]}${bhostmin[6+i]}${bhostmin[7+i]}`;
+obhmax[j]=`printf "${bhostmax[0+i]}${bhostmax[1+i]}${bhostmax[2+i]}${bhostmax[3+i]}${bhostmax[4+i]}"${bhostmax[5+i]}${bhostmax[6+i]}${bhostmax[7+i]}`;
+j=$((j+1));
+done
+
+for ((j=0;j<4;j++))
+do
+doctet[j]=`echo $(( 2#${octet[$j]} ))`;
+dbd[j]=`echo $(( 2#${obd[$j]} ))`;
+dhmin[j]=`echo $(( 2#${obhmin[$j]} ))`;
+dhmax[j]=`echo $(( 2#${obhmax[$j]} ))`;
+done
+
+hosts=`echo "2^($zeroes)" | bc -ql`;
+if [ $hosts -eq 1 ]
+then
+hosts=1;
+else
+hosts=$(($hosts-2));
+fi
+hosts=$hosts;
+network=`echo "${doctet[0]}.${doctet[1]}.${doctet[2]}.${doctet[3]}"`;
+broadcast=`echo "${dbd[0]}.${dbd[1]}.${dbd[2]}.${dbd[3]}"`;
+hostmin=`echo "${dhmin[0]}.${dhmin[1]}.${dhmin[2]}.${dhmin[3]}"`;
+hostmax=`echo "${dhmax[0]}.${dhmax[1]}.${dhmax[2]}.${dhmax[3]}"`;
+
+printf "network=$b\n";
+printf "broadcast=$b\n";
+printf "hostmin=$hostmin\n";
+printf "hostmax=$hostmax\n";
+printf "hosts=$hosts\n";
